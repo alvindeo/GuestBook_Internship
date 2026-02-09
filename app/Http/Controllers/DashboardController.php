@@ -67,8 +67,34 @@ class DashboardController extends Controller
             $query->where('tanggal_jam_masuk', '>=', now()->startOfYear());
         }
 
-        $reports = $query->get();
+        $reports = $query->orderBy('tanggal_jam_masuk', 'desc')->get();
 
         return view('admin.reports', compact('reports', 'periode'));
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $kunjungan = Kunjungan::findOrFail($id);
+        $newStatus = $request->status;
+        
+        if ($newStatus == 'OUT' && $kunjungan->status == 'IN') {
+            $masuk = Carbon::parse($kunjungan->tanggal_jam_masuk);
+            $keluar = now();
+            $durasi = $masuk->diffInMinutes($keluar);
+            
+            $kunjungan->update([
+                'status' => 'OUT',
+                'tanggal_jam_keluar' => $keluar,
+                'durasi_kunjungan' => $durasi
+            ]);
+        } elseif ($newStatus == 'IN' && $kunjungan->status == 'OUT') {
+            $kunjungan->update([
+                'status' => 'IN',
+                'tanggal_jam_keluar' => null,
+                'durasi_kunjungan' => 0
+            ]);
+        }
+        
+        return redirect()->back()->with('success', 'Status kunjungan berhasil diperbarui!');
     }
 }

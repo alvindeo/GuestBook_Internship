@@ -93,13 +93,6 @@
                         Batal, kembali ke pendaftaran
                     </button>
                 </form>
-
-                <div class="mt-10 pt-8 border-t border-tan/20 text-center" id="checkout-link-container">
-                    <p class="text-tan text-sm font-medium">Sudah selesai urusan?</p>
-                    <button type="button" onclick="showCheckout()" class="text-primary-red font-black hover:text-deep-maroon transition-all mt-1">
-                        Check-out Sekarang →
-                    </button>
-                </div>
             </div>
             
         </div>
